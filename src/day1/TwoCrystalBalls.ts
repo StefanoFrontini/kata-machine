@@ -6,9 +6,12 @@ export default function two_crystal_balls(breaks: boolean[]): number {
             break;
         }
     }
+    if (i < 1) {
+        return 0;
+    }
     const bound = i;
     i -= jmpAmount;
-    for (; i < bound && i < breaks.length; i++) {
+    for (; i <= bound && i < breaks.length; i++) {
         if (breaks[i]) {
             return i;
         }
