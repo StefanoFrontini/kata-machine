@@ -25,8 +25,8 @@ export default class SinglyLinkedList<T> {
             this.head = n;
         } else {
             const next = this.head;
-            this.head = n;
             n.next = next;
+            this.head = n;
         }
         this.length++;
     }
