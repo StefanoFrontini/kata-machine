@@ -84,8 +84,13 @@ export default class DoublyLinkedList<T> {
             node !== undefined;
             node = node.next
         ) {
-            if (node.next?.value === item) {
-                console.log(node.next.value);
+            if (this.head?.value === item) {
+                const nodeToDelete = this.head;
+                const next = this.head.next;
+                this.head = next;
+                this.length--;
+                return nodeToDelete?.value;
+            } else if (node.next?.value === item) {
                 const nodeToDelete = node.next;
                 const next = node.next.next;
                 node.next = next;
@@ -131,6 +136,7 @@ export default class DoublyLinkedList<T> {
             if (this.head !== undefined) {
                 this.head.prev = undefined;
             }
+            this.length--;
             return nodeToDelete?.value;
         }
         for (
@@ -157,8 +163,8 @@ list.prepend(5);
 list.prepend(7);
 list.append(10);
 list.insertAt(20, 2);
-list.remove(5);
-list.removeAt(1);
+list.remove(7);
+// list.removeAt(1);
 // console.log("value at index 0", list.get(0));
 // console.log(list);
 console.dir(list, { depth: null });
