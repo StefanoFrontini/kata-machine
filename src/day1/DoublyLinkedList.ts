@@ -35,16 +35,16 @@ export default class DoublyLinkedList<T> {
     }
     insertAt(item: T, idx: number): void {
         const n = this.createNode(item);
-        if (idx > this.length - 1) {
+        if (idx > this.length) {
             console.log("index is out of bounds");
-            return;
-        }
-        if (idx === 0) {
+        } else if (idx === this.length) {
+            this.append(item);
+        } else if (idx === 0) {
             this.prepend(item);
         } else {
             for (
                 let node: Node<T> | undefined = this.head, i = 0;
-                node !== undefined;
+                node !== undefined && i < idx;
                 node = node.next, i++
             ) {
                 if (i === idx - 1) {
@@ -84,13 +84,14 @@ export default class DoublyLinkedList<T> {
             node !== undefined;
             node = node.next
         ) {
-            if (this.head?.value === item) {
-                const nodeToDelete = this.head;
-                const next = this.head.next;
+            if (node.value === item) {
+                const nodeToDelete = node;
+                const next = node.next;
                 this.head = next;
                 this.length--;
                 return nodeToDelete?.value;
-            } else if (node.next?.value === item) {
+            }
+            if (node.next?.value === item) {
                 const nodeToDelete = node.next;
                 const next = node.next.next;
                 node.next = next;
