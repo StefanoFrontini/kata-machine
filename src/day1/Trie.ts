@@ -43,12 +43,36 @@ export default class Trie {
         }
         curr.isWord = true;
     }
-    deleteItem(curr: Node | undefined, word: string, item: string): void {}
+    deleteItem(curr: Node, item: string, count: number): void {
+        if (count === item.length) {
+            return;
+        }
+
+        for (let i = 0; i < curr.children.length; i++) {
+            if (
+                curr.children[i] &&
+                this.getLetterFromIndex(i) === item[count]
+            ) {
+                count++;
+                this.deleteItem(curr.children[i] as Node, item, count);
+                curr.children[i]!.isWord = false;
+                const hasNoChildren = curr.children[i]?.children.every(
+                    (el) => el === undefined || el === null,
+                );
+                if (hasNoChildren) {
+                    curr.children[i] = undefined;
+                }
+                return;
+            }
+        }
+        throw new Error("item not found");
+    }
     delete(item: string): void {
         if (!this.head) {
             throw new Error("Trie is empty");
         }
-        this.deleteItem(this.head, "", item);
+        let curr = this.head;
+        this.deleteItem(curr, item, 0);
     }
     walk(
         curr: Node | undefined,
@@ -97,7 +121,8 @@ export default class Trie {
 const trie = new Trie();
 trie.insert("ste");
 trie.insert("str");
-trie.insert("sale");
+trie.insert("sas");
+trie.delete("ste");
 const prefix = "s";
 const result = trie.find(prefix);
 console.log("result:", result);
