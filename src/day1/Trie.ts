@@ -34,7 +34,7 @@ export default class Trie {
         for (let c of str) {
             const idx = this.getIndex(c);
             if (curr.children[idx]) {
-                curr = curr.children[idx];
+                curr = curr.children[idx]!;
             } else {
                 const n = this.createNode();
                 curr.children[idx] = n;
@@ -55,7 +55,9 @@ export default class Trie {
             ) {
                 count++;
                 this.deleteItem(curr.children[i] as Node, item, count);
-                curr.children[i]!.isWord = false;
+                if (count === item.length) {
+                    curr.children[i]!.isWord = false;
+                }
                 const hasNoChildren = curr.children[i]?.children.every(
                     (el) => el === undefined || el === null,
                 );
@@ -109,7 +111,7 @@ export default class Trie {
         for (let c of partial) {
             const idx = this.getIndex(c);
             if (curr.children[idx]) {
-                curr = curr.children[idx];
+                curr = curr.children[idx]!;
             } else {
                 return [];
             }
@@ -119,11 +121,12 @@ export default class Trie {
 }
 
 const trie = new Trie();
-trie.insert("ste");
-trie.insert("str");
-trie.insert("sas");
-trie.delete("ste");
-const prefix = "s";
+trie.insert("foo");
+trie.insert("fool");
+trie.insert("foolish");
+trie.insert("bar");
+trie.delete("fool");
+const prefix = "fo";
 const result = trie.find(prefix);
 console.log("result:", result);
 // console.log(JSON.stringify(trie, null, 2));
