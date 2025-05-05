@@ -161,5 +161,6 @@ list.removeAt(1);
 // list.insertAt(3, 2);
 // list.remove(3);
 // list.removeAt(0);
+console.log(list);
 console.log(JSON.stringify(list, null, 2));
 // console.log(list.get(1));
