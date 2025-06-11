@@ -26,21 +26,22 @@ chicago.add_route(el_paso, 80);
 denver.add_route(chicago, 40);
 denver.add_route(el_paso, 140);
 
-function dijkstra_shortest_path(starting_city: City, final_destination: City) {
+function dijkstra_shortest_path(
+    starting_city: City,
+    final_destination: City,
+): Array<string> {
     const cheapest_prices_table = new Map<string, number>();
-    const cheapest_previous_stopover_city_table = new Map();
+    const cheapest_previous_stopover_city_table = new Map<string, string>();
     let unvisited_cities: Array<City> = [];
     const visited_cities = new Map<string, boolean>();
     cheapest_prices_table.set(starting_city.name, 0);
     let current_city: City | undefined = starting_city;
     while (current_city) {
         visited_cities.set(current_city.name, true);
-        const indexToDelete = unvisited_cities.findIndex(
-            (el) => el.name === current_city?.name,
+        const updated_unvisited_cities = unvisited_cities.filter(
+            (el) => el.name !== current_city?.name,
         );
-        if (indexToDelete !== -1) {
-            unvisited_cities.splice(indexToDelete, 1);
-        }
+        unvisited_cities = updated_unvisited_cities;
         for (const [adjacent_city, price] of current_city.routes) {
             if (visited_cities.has(adjacent_city.name)) {
                 continue;
@@ -72,14 +73,17 @@ function dijkstra_shortest_path(starting_city: City, final_destination: City) {
                 );
             }
         }
-        current_city = findMinPrice(unvisited_cities, cheapest_prices_table);
+        current_city = findCheapestKnownRoutefromStartingCity(
+            unvisited_cities,
+            cheapest_prices_table,
+        );
     }
     const shortest_path: string[] = [];
     let current_city_name = final_destination.name;
     while (current_city_name !== starting_city.name) {
         shortest_path.push(current_city_name);
         current_city_name =
-            cheapest_previous_stopover_city_table.get(current_city_name);
+            cheapest_previous_stopover_city_table.get(current_city_name)!;
     }
     shortest_path.push(starting_city.name);
     for (const [c, p] of cheapest_prices_table) {
@@ -91,7 +95,7 @@ function dijkstra_shortest_path(starting_city: City, final_destination: City) {
 const s_path = dijkstra_shortest_path(atlanta, el_paso);
 console.log("🚀 ~ s_path:", s_path);
 
-function findMinPrice(
+function findCheapestKnownRoutefromStartingCity(
     arr: Array<City>,
     cheapest_price_table: Map<string, number>,
 ) {
