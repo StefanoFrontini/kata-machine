@@ -1,7 +1,9 @@
-function productExceptSelf(nums: number[]) {
-    let prefix: number[] = Array.from({ length: nums.length }, () => 0);
-    // let product = 1;
+function productExceptSelf2(nums: number[]) {
+    let prefix: number[] = [];
+    let suffix: number[] = [];
+    let result: number[] = [];
     for (let i = 0; i < nums.length; i++) {
+        const j = nums.length - 1 - i;
         if (i === 0) {
             prefix[0] = 1;
         }
@@ -11,9 +13,20 @@ function productExceptSelf(nums: number[]) {
         if (i > 1) {
             prefix[i] = nums[i - 1] * prefix[i - 1];
         }
-        // product *= nums[i];
-        // result[i] = product;
+        if (j === nums.length - 1) {
+            suffix[nums.length - 1] = 1;
+        }
+        if (j === nums.length - 2) {
+            suffix[nums.length - 2] = nums[nums.length - 1];
+        }
+        if (j < nums.length - 2) {
+            suffix[j] = nums[j + 1] * suffix[j + 1];
+        }
     }
-    console.log(prefix);
+    for (let k = 0; k < prefix.length; k++) {
+        result[k] = prefix[k] * suffix[k];
+    }
+    return result;
 }
-productExceptSelf([5, 7, 3, 2]);
+// productExceptSelf([5, 7, 3, 2]);
+console.log(productExceptSelf2([1, 2, 3, 4]));
